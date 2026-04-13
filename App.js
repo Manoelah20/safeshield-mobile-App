@@ -16,7 +16,7 @@ export default function App() {
         <Card style={styles.card}>
           <Card.Content>
             <Text variant="titleLarge" style={styles.title}>
-              🔐 Gerador de Senhas
+              🔐 SafeShield Mobile
             </Text>
             <Text variant="bodyMedium">
               Seu aplicativo está funcionando perfeitamente!
