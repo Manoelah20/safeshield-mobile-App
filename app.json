@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "gerador-senhas",
-    "slug": "gerador-senhas",
+    "name": "SafeShield Mobile",
+    "slug": "safeshield-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "geradorsenhas",
+    "scheme": "safeshieldmobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
