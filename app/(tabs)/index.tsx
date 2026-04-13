@@ -17,14 +17,39 @@ export default function TabOneScreen() {
   const [includeNumbers, setIncludeNumbers] = useState(true);
   const [includeSymbols, setIncludeSymbols] = useState(true);
   const [includeUppercase, setIncludeUppercase] = useState(true);
+  const [excludeAmbiguous, setExcludeAmbiguous] = useState(false);
   const [passwordHistory, setPasswordHistory] = useState<string[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const calculatePasswordStrength = (pwd: string) => {
+    if (!pwd) return { score: 0, label: '', color: '#e0e0e0' };
+    
+    let score = 0;
+    if (pwd.length >= 8) score += 1;
+    if (pwd.length >= 12) score += 1;
+    if (pwd.length >= 16) score += 1;
+    if (/[a-z]/.test(pwd)) score += 1;
+    if (/[A-Z]/.test(pwd)) score += 1;
+    if (/[0-9]/.test(pwd)) score += 1;
+    if (/[^a-zA-Z0-9]/.test(pwd)) score += 1;
+    
+    if (score <= 2) return { score, label: 'Fraca', color: '#ff4444' };
+    if (score <= 4) return { score, label: 'Média', color: '#ffbb33' };
+    if (score <= 5) return { score, label: 'Boa', color: '#00C851' };
+    return { score, label: 'Forte', color: '#007E33' };
+  };
+
   const generatePassword = () => {
-    const numbers = '0123456789';
-    const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    let numbers = '0123456789';
+    let symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
     const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    
+    if (excludeAmbiguous) {
+      numbers = '23456789';
+      uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+      symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    }
     
     let characters = lowercase;
     if (includeUppercase) characters += uppercase;
@@ -68,6 +93,18 @@ export default function TabOneScreen() {
   const secondaryTextColor = isDarkMode ? '#aaaaaa' : '#666666';
   const borderColor = isDarkMode ? '#333333' : '#e0e0e0'; // CORRIGIDO: definida aqui
   const primaryColor = '#ffc107';
+  const passwordStrength = calculatePasswordStrength(password);
+
+  const clearHistory = () => {
+    Alert.alert(
+      'Limpar Histórico',
+      'Deseja realmente limpar todo o histórico de senhas?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Limpar', onPress: () => setPasswordHistory([]), style: 'destructive' }
+      ]
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -76,6 +113,9 @@ export default function TabOneScreen() {
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <Text style={[styles.title, { color: textColor }]}>SafeShield Mobile</Text>
+            <Text style={[styles.description, { color: secondaryTextColor }]}>
+              Gerador de senhas seguro para proteger suas contas
+            </Text>
           </View>
           <IconButton
             icon={isDarkMode ? "white-balance-sunny" : "moon-waning-crescent"}
@@ -122,6 +162,27 @@ export default function TabOneScreen() {
                 roundness: 8,
               }}
             />
+
+            {/* Indicador de Força da Senha */}
+            {password && (
+              <View style={styles.strengthContainer}>
+                <Text style={[styles.strengthLabel, { color: textColor }]}>Força da Senha:</Text>
+                <View style={styles.strengthBarContainer}>
+                  <View 
+                    style={[
+                      styles.strengthBar, 
+                      { 
+                        width: `${(passwordStrength.score / 7) * 100}%`,
+                        backgroundColor: passwordStrength.color 
+                      }
+                    ]} 
+                  />
+                </View>
+                <Text style={[styles.strengthText, { color: passwordStrength.color }]}>
+                  {passwordStrength.label}
+                </Text>
+              </View>
+            )}
 
             {/* Comprimento */}
             <TextInput
@@ -173,6 +234,16 @@ export default function TabOneScreen() {
               />
             </View>
 
+            <View style={styles.option}>
+              <View style={styles.optionTextContainer}>
+                <Text style={[styles.optionText, { color: textColor }]}>Excluir ambíguos (0, O, 1, l, I)</Text>
+              </View>
+              <Switch
+                value={excludeAmbiguous}
+                onValueChange={setExcludeAmbiguous}
+              />
+            </View>
+
           </Card.Content>
 
           <Card.Actions>
@@ -186,15 +257,23 @@ export default function TabOneScreen() {
           </Card.Actions>
         </Card>
 
-        {/* HISTÓRICO DE SENHAS - CORRIGIDO */}
+        {/* HISTÓRICO DE SENHAS */}
         {passwordHistory.length > 0 && (
           <Card style={[styles.card, styles.historyCard, { backgroundColor: surfaceColor }]}>
             <Card.Content>
               <View style={styles.historyTitleContainer}>
-                <Text style={[styles.historyTitle, { color: textColor }]}>📜 Histórico de Senhas</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                  <Text style={[styles.historyTitle, { color: textColor }]}>📜 Histórico de Senhas</Text>
+                  <IconButton
+                    icon="delete"
+                    size={20}
+                    onPress={clearHistory}
+                    iconColor={textColor}
+                  />
+                </View>
               </View>
               {passwordHistory.map((pwd, index) => (
-                <View key={index} style={[styles.historyItem, { borderBottomColor: borderColor }]}> {/* CORRIGIDO: borderColor definida */}
+                <View key={index} style={[styles.historyItem, { borderBottomColor: borderColor }]}>
                   <View style={styles.historyPasswordContainer}>
                     <Text style={[styles.historyPassword, { color: textColor }]} numberOfLines={1}>
                       {pwd}
@@ -279,6 +358,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  description: {
+    fontSize: 14,
+    marginTop: 4,
+  },
   subtitle: {
     fontSize: 14,
     fontStyle: 'italic',
@@ -286,6 +369,30 @@ const styles = StyleSheet.create({
   passwordInput: {
     marginBottom: 32,
     marginTop: 8,
+  },
+  strengthContainer: {
+    marginBottom: 16,
+  },
+  strengthLabel: {
+    fontSize: 14,
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  strengthBarContainer: {
+    height: 8,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  strengthBar: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  strengthText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'right',
   },
   input: {
     marginBottom: 16,
