@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Alert, ScrollView, Dimensions } from 'react-native';
 import { 
   Text, 
   Button, 
@@ -8,6 +8,8 @@ import {
   Switch,
   IconButton
 } from 'react-native-paper';
+
+const { width } = Dimensions.get('window');
 
 export default function TabOneScreen() {
   const [password, setPassword] = useState('');
@@ -102,6 +104,7 @@ export default function TabOneScreen() {
               mode="outlined"
               style={styles.passwordInput}
               editable={false}
+              dense={false}
               right={
                 password ? (
                   <TextInput.Icon 
@@ -110,6 +113,14 @@ export default function TabOneScreen() {
                   />
                 ) : null
               }
+              theme={{
+                colors: {
+                  primary: primaryColor,
+                  background: surfaceColor,
+                  onSurface: textColor,
+                },
+                roundness: 8,
+              }}
             />
 
             {/* Comprimento */}
@@ -120,6 +131,15 @@ export default function TabOneScreen() {
               keyboardType="numeric"
               mode="outlined"
               style={styles.input}
+              dense={false}
+              theme={{
+                colors: {
+                  primary: primaryColor,
+                  background: surfaceColor,
+                  onSurface: textColor,
+                },
+                roundness: 8,
+              }}
             />
 
             {/* Opções */}
@@ -218,7 +238,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    padding: 16,
+    padding: width > 768 ? 32 : 16,
   },
   header: {
     flexDirection: 'row',
@@ -231,6 +251,9 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 16,
+    maxWidth: width > 768 ? 800 : '100%',
+    alignSelf: 'center',
+    width: '100%',
   },
   logoContainer: {
     alignItems: 'center',
@@ -261,7 +284,8 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   passwordInput: {
-    marginBottom: 16,
+    marginBottom: 32,
+    marginTop: 8,
   },
   input: {
     marginBottom: 16,
