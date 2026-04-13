@@ -2,12 +2,5 @@
   "buildCommand": "npx expo export --platform web",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-  "framework": null,
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "https://finder-box.vercel.app",
-      "permanent": true
-    }
-  ]
+  "framework": null
 }
