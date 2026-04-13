@@ -2,7 +2,7 @@
   "name": "safeshield-mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "homepage": "https://manoelah20.github.io/safeshield-mobile-App",
+  "homepage": "https://safeshield-mobile-app2-git-master-manoela-harrisons-projects.vercel.app",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
