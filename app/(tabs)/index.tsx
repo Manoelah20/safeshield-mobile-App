@@ -219,7 +219,7 @@ export default function TabOneScreen() {
       <View style={[styles.footer, { backgroundColor: primaryColor }]}>
         <View style={styles.footerTextContainer}>
           <Text style={styles.footerText}>
-            © 2025 SafeShield Mobile. Todos os direitos reservados.
+            &copy; 2025 SafeShield Mobile. Todos os direitos reservados.
           </Text>
         </View>
         <View style={styles.footerSubtextContainer}>

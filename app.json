@@ -6,10 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "geradorsenhas",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-    "supportsTablet": true
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
