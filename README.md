@@ -1,5 +1,5 @@
 
-🔐 Gerador de Senhas – App Expo
+🔐 SafeShield Mobile – App Expo
 
 Bem-vinda ao seu projeto criado com Expo usando create-expo-app. Este app é um gerador de senhas simples e funcional, ideal para aprender e praticar desenvolvimento mobile com React Native.
 
